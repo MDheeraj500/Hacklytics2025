@@ -12,11 +12,10 @@ Traditional predictive models often struggle with adapting to real‑time market
 Our solution is built with a modular, multi‐agent architecture that consists of the following key components:
 
 - **Mathematical Reasoning Agent:**  
-  - Uses both ARIMA and Prophet models, with dynamic integration of external regressors (GDP and device sentiment) to accurately forecast future prices.
-  - Recently enhanced to dynamically forecast regressors themselves, thereby improving forecast responsiveness.
-  
+  - Uses Prophet model, with integration of external regressors (GDP and device sentiment) to forecast future prices.
+
 - **Market Insights Agent:**  
-  - Analyzes real‑time market sentiment, historical pricing trends, and factors such as weekend effects.
+  - Analyzes market sentiment, historical pricing trends, and factors such as weekend effects.
   - Identifies anomalies and computes correlations to provide context for forecast outputs.
   
 - **Recommendation Agent:**  
