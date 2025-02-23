@@ -1,0 +1,41 @@
+{
+    "display": {
+        "size": "6.06 inches",
+        "resolution": "2532 x 1170"
+    },
+    "camera": {
+        "rear": {
+            "wide": "12MP",
+            "ultra_wide": "12MP",
+            "telephoto": "12MP",
+            "lidar": true
+        },
+        "front": "12MP"
+    },
+    "operating_system": "iOS 14.5.1",
+    "processor": "Apple A14 Bionic",
+    "memory": {
+        "ram": "6GB",
+        "storage": "128GB"
+    },
+    "connectivity": {
+        "cellular": "5G",
+        "wifi": "Wi-Fi 6", 
+        "bluetooth": "Bluetooth 5.0"
+    },
+    "security": {
+        "type": "3D scanner",
+        "feature": "Face ID"
+    },
+    "battery": {
+        "capacity": "2,815 mA*h"
+    },
+    "physical": {
+        "weight": {
+            "grams": 189,
+            "ounces": 6.7
+        }
+    },
+    "release_date": "October 23, 2020"
+}
+

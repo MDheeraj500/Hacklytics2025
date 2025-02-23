@@ -1,0 +1,8 @@
+unit testing scripts
+.env
+venv
+__pycache__
+context.md
+LCEL docs.md
+outparser docs.md
+
