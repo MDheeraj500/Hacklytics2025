@@ -2,8 +2,16 @@ langchain
 pandas
 numpy
 statsmodels
+prophet
+plotly
+streamlit
+scikit-learn
+langchain-groq
 python-dotenv
 langchain-openai
 openai
 streamlit
 langchain_core
+langchain_groq
+plotly
+prophet
