@@ -8,6 +8,8 @@ from agents.recommendation_agent import RecommendationAgent
 from agents.explanatory_agent import ExplanatoryAgent
 import plotly.graph_objects as go
 import json
+import pandas as pd
+from prophet import Prophet
 
 class AgentOrchestrator:
     def __init__(self, data_path: str, metadata_paths: Dict[str, str]):
@@ -41,12 +43,17 @@ class AgentOrchestrator:
                 model_name=model_name
             )
             print(f"[Orchestrator] Explanations for {model_name}: {explanations}")
+        
+            predictions_prophet = {model_name: self.mathematical_agent.predict_next_month_prophet(model_name)}
+
             return {
                 'mathematical_analysis': math_analysis,
                 'market_analysis': market_analysis,
                 'recommendations': recommendations,
-                'explanations': explanations
+                'explanations': explanations,
+                'predictions_prophet': predictions_prophet
             }
+
         except Exception as e:
             st.error(f"Error analyzing model {model_name}: {str(e)}")
             raise Exception(f"Error analyzing model {model_name}: {str(e)}")
@@ -91,9 +98,16 @@ def display_business_insights(model_results: Dict, model_name: str):
         st.write("### Market Position Analysis")
         st.write(insights['market_position'])
 
+def display_price_prediction_prophet(model_results: Dict, model_name: str):
+    """Display the Prophet-based 30-day price prediction as a line chart"""
+    if 'predictions_prophet' in model_results and model_name in model_results['predictions_prophet']:
+        prediction = model_results['predictions_prophet'][model_name]
+        st.write("### 180-Day Price Prediction (Prophet)")
+        st.line_chart(prediction['forecast'])
+
 def main():
-    st.set_page_config(page_title="iPhone Price Analysis", layout="wide")
-    st.title("iPhone Price Analysis Dashboard")
+    st.set_page_config(page_title="DeviceIQ HyperMind", layout="wide")
+    st.title("DeviceIQ HyperMind")
     data_path = "data/final_merged_data.csv"
     metadata_paths = {
         "iPhone_12": "data/metadata_iphone_12.json",
@@ -110,17 +124,18 @@ def main():
                 results = st.session_state.orchestrator.analyze_model(selected_model)
                 st.session_state.results = results
                 st.success("Analysis complete!")
-                tab1, tab2, tab3, tab4 = st.tabs([
+                tab1, tab2, tab3, tab4, tab5 = st.tabs([
                     "Business Insights",
                     "Price Trends",
                     "Recommendations",
-                    "Market Analysis"
+                    "Market Analysis",
+                    "Price Prediction"
                 ])
                 with tab1:
                     st.header("Business Insights and Explanations")
                     display_business_insights(results, selected_model)
                 with tab2:
-                    st.header("Price and Sentiment Trends")
+                    st.header("Trends Analysis")
                     display_price_trends(results, selected_model)
                     display_feature_importance(results, selected_model)
                 with tab3:
@@ -136,12 +151,17 @@ def main():
                     st.header("Market Insights")
                     if 'market_analysis' in results:
                         summary = st.session_state.orchestrator.market_insights_agent.get_market_summary(selected_model)
-                        st.write("### Market Summary")
+                        st.write("### Market Insights Summary")
                         st.write(summary)
                         anomalies = results['market_analysis'][selected_model]['sentiment_anomalies']
                         if anomalies:
                             st.write("### Sentiment Anomalies")
                             st.dataframe(anomalies)
+                            # Convert list of dicts to DataFrame for proper plotting
+                            df_anomalies = pd.DataFrame(anomalies)
+                            df_anomalies['date'] = pd.to_datetime(df_anomalies['date'])
+                            df_anomalies = df_anomalies.set_index('date')
+                            st.line_chart(df_anomalies['sentiment'])
                         st.write("### Market Metrics")
                         col1, col2 = st.columns(2)
                         with col1:
@@ -157,9 +177,12 @@ def main():
                                 "Price-Sentiment Correlation",
                                 f"{price_sentiment['immediate_correlation']:.2f}"
                             )
+                with tab5:
+                    st.header("Price Prediction for Next 180 Days (prophet)")
+                    display_price_prediction_prophet(results, selected_model)
             except Exception as e:
                 st.error(f"Error during analysis: {str(e)}")
-    # Sidebar code remains unchanged...
+
     with st.sidebar:
         st.header("Model Specifications")
         if selected_model:

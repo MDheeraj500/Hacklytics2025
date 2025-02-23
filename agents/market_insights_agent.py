@@ -22,7 +22,7 @@ data: {query}
             input_variables=["query"],
             template=prompt_template
         )
-        llm = ChatGroq(temperature=0.7, model_name="deepseek-r1-distill-qwen-32b")
+        llm = ChatGroq(temperature=0.7, model_name="mixtral-8x7b-32768")
         # Updated LCEL chain
         self.chain = prompt | llm | StrOutputParser()
 
@@ -74,7 +74,7 @@ data: {query}
             'price_leads_sentiment': float(self.df[sentiment_col].corr(price_lead))
         }
 
-    def identify_sentiment_anomalies(self, model_name: str, threshold: float = 2.0) -> List[Dict]:
+    def identify_sentiment_anomalies(self, model_name: str, threshold: float = 1.5) -> List[Dict]:
         sentiment_col = f"{model_name}_Sentiment"
         sentiments = self.df[sentiment_col]
         rolling_mean = sentiments.rolling(window=7).mean()

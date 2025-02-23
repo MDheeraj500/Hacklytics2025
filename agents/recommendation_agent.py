@@ -22,7 +22,7 @@ data: {query}
             input_variables=["query"],
             template=prompt_template
         )
-        llm = ChatGroq(temperature=0.7, model_name="deepseek-r1-distill-qwen-32b")
+        llm = ChatGroq(temperature=0.7, model_name="mixtral-8x7b-32768")
         self.chain = prompt | llm | StrOutputParser()
 
         if data_path:

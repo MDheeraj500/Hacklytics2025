@@ -27,7 +27,7 @@ Explanation:
             input_variables=["query"],
             template=prompt_template
         )
-        llm = ChatGroq(temperature=0.7, model_name="deepseek-r1-distill-qwen-32b")
+        llm = ChatGroq(temperature=0.7, model_name="mixtral-8x7b-32768")
         # Updated LCEL pipeline: prompt first, then LLM, and finally the output parser
         self.chain = prompt | llm | StrOutputParser()
 
